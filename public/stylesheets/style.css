@@ -295,7 +295,8 @@ input a{
 
 .modal-content{
     border-radius: 4px;
-    width: 520px;
+    max-width: 520px;
+    min-width: 220px;
 }
 
 .modal-header {
@@ -346,9 +347,7 @@ input a{
     text-align: center;
 }
 
-#myFavModal .modal-dialog {
-    width: 960px;
-}
 #myFavModal .modal-content{
-    width:960px;
+    max-width:960px;
+    min-width: 220px;
 }
