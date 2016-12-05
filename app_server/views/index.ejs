@@ -1,19 +1,138 @@
 <!DOCTYPE html>
 <html ng-app="addressBook">
-  <head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= title %></title>
-      <link rel='stylesheet' href='/stylesheets/style.css' />
-      <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css'/>
-      <link rel='stylesheet' href='/bootstrap/css/bootstrap-theme.min.css'/>
-      <script src="/angular/angular.min.js"></script>
-      <script src="/javascripts/controllers/addressBook.js"></script>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  <input ng-model="data">
-  {{data}}
-  </body>
-  <script src="/javascripts/jquery-3.1.1.min.js"></script>
-  <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css'/>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script src="/angular/angular.min.js"></script>
+    <script src="/javascripts/controllers/addressBook.js"></script>
+    <script src="/javascripts/services/contactsService.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="/javascripts/jquery-3.1.1.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<body ng-controller="addressBookCtrl" ng-cloak ng-init="getContacts()">
+
+<!-- Header -->
+<div class="header" align="center">
+    <h1 class="Looking-for-someone">Looking for someone? </h1>
+    <input type="search" class="searchBox" ng-model="mySearch" placeholder="Type the persons name here...">
+</div>
+
+<div class="container" align="center">
+
+    <!-- Favourites Modal -->
+    <div class="modal fade" id="myFavModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" align="center">
+                    <h1>My Favourites</h1>
+                    <h3 ng-hide="myFavs.length">You haven't added any yet! :(</h3>
+                </div>
+                <div class="modal-body" align="center">
+
+                    <div class="favourites" ng-show="favs">
+                        <div class="userCards" ng-repeat="people in myFavs | filter:mySearch">
+                            <div class="userCardsContent" align="center">
+                                <img id="userPicture" src="{{people.picture.large}}">
+                                <h4 id="userName">{{people.name.first}} {{people.name.last}}</h4>
+                                <h5 id="userEmail">{{people.email}}</h5>
+                                <h5 id="userCell">{{people.cell}}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="filterOptions">
+        <li ng-click="changeView = false"><img src="/images/grid-icon.svg"></li>
+        <li ng-click="changeView = true"><img src="/images/list-icon.svg"></li>
+        <li><button id="favImg" ng-click="getMyFavs()" data-toggle="modal" data-target="#myFavModal">My Favourites</button></li>
+    </ul>
+
+    <!-- Alert Message -->
+    <div ng-show="favAdded" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Congrats!</strong> Added to your Favourites!
+    </div>
+    <!-- Boxed View -->
+    <div ng-repeat="(k,v) in contacts">
+        <div class="groupBy" ng-hide="changeView || mySearch">
+            {{k}}
+        </div>
+        <div class="userCards" ng-hide="changeView"
+             ng-repeat="people in v | filter:mySearch | filter:{gender: genderFilter}">
+            <div class="userCardsContent">
+                <img id="fav" ng-click="addFav(people)" src="/images/star-active.svg">
+                <img id="userPicture" src="{{people.picture.medium}}">
+                <h4 id="userName">{{people.name.first}} {{people.name.last.length > 5 ? '...' : people.name.last}}</h4>
+                <h5 id="userEmail">{{people.email}}</h5>
+                <h5 id="userCell">{{people.cell}}</h5>
+            </div>
+            <div class="userCardsFooter">
+                <button id="viewMoreBtn" data-toggle="modal" data-target="#myModal" ng-click="viewDetail(people)">ViewMore</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table View -->
+    <div ng-repeat="(k,v) in contacts">
+        <div class="groupBy" ng-hide="!changeView || mySearch">
+            {{k}}
+        </div>
+        <div class="horizontalUserCards" ng-show="changeView"
+             ng-repeat="people in v | filter:mySearch | filter:{gender: genderFilter}">
+            <div class="horizontalContent">
+                <span id="secZero" data-toggle="tooltip" data-placement="right" title="Add to Favourites" ng-click="addFav(people)"><img src="/images/star-active.svg"></span>
+                <span id="secOne"> <img id="userPicture" src="{{people.picture.medium}}"></span>
+                <span id="secTwo" align="center">{{people.name.first}} {{people.name.last.length  > 8 ? '...' : people.name.last}}</span>
+                <span id="secThree">{{people.email}}</span>
+                <span id="secFour">{{people.cell}}</span>
+                <span id="secFive"> <button id="viewMoreBtn" data-toggle="modal" data-target="#myModal" ng-click="viewDetail(people)">View More</button></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" align="center">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <img id="userPicture" src="{{detailViewObj.picture.large}}">
+                    <h4 id="userName">{{detailViewObj.name.first}} {{detailViewObj.name.last}}</h4>
+                    <p>Citizen of {{detailViewObj.nat}}</p>
+                </div>
+                <div class="modal-body" align="center">
+
+                    <div id="userDetails"><span id="title">Mobile</span><span id="detail">{{detailViewObj.cell}}</span></div>
+                    <div id="userDetails"><span id="title">Email</span><span id="detail">{{detailViewObj.email}}</span></div>
+                    <div id="userDetails"><span id="title">Street</span><span id="detail">{{detailViewObj.location.street}}</span></div>
+                    <div id="userDetails"><span id="title">City</span><span id="detail">{{detailViewObj.location.city}}</span></div>
+                    <div id="userDetails"><span id="title">State</span><span id="detail">{{detailViewObj.location.state}}</span></div>
+                    <div id="userDetails"><span id="title">Post Code</span><span id="detail">{{detailViewObj.location.postcode}}</span></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
 </html>
