@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="30fd4521-bf8a-4111-848f-3e1e465dc8a6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
     </list>
     <ignored path="addressBookApp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -263,12 +262,12 @@
       <option name="presentableId" value="Default" />
       <updated>1480757969726</updated>
       <workItem from="1480757972357" duration="50600000" />
-      <workItem from="1480951739015" duration="5098000" />
+      <workItem from="1480951739015" duration="5226000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55698000" />
+    <option name="totallyTimeSpent" value="55826000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="809" extended-state="6" />
