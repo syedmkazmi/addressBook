@@ -29,6 +29,7 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header" align="center">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h1>My Favourites</h1>
                     <h3 ng-hide="myFavs.length">You haven't added any yet! :(</h3>
                 </div>
@@ -72,7 +73,7 @@
         <div class="userCards" ng-hide="changeView"
              ng-repeat="people in v | filter:mySearch | filter:{gender: genderFilter}">
             <div class="userCardsContent">
-                <img id="fav" ng-click="addFav(people)" src="/images/star-active.svg">
+                <img id="fav" ng-click="addFav(people)"  data-toggle="modal" data-target="#myFavModal" src="/images/star-active.svg">
                 <img id="userPicture" src="{{people.picture.medium}}">
                 <h4 id="userName">{{people.name.first}} {{people.name.last.length > 5 ? '...' : people.name.last}}</h4>
                 <h5 id="userEmail">{{people.email}}</h5>
@@ -92,7 +93,7 @@
         <div class="horizontalUserCards" ng-show="changeView"
              ng-repeat="people in v | filter:mySearch | filter:{gender: genderFilter}">
             <div class="horizontalContent">
-                <span id="secZero" data-toggle="tooltip" data-placement="right" title="Add to Favourites" ng-click="addFav(people)"><img src="/images/star-active.svg"></span>
+                <span id="secZero" data-toggle="modal" data-target="#myFavModal" ng-click="addFav(people)"><img src="/images/star-active.svg"></span>
                 <span id="secOne"> <img id="userPicture" src="{{people.picture.medium}}"></span>
                 <span id="secTwo" align="center">{{people.name.first}} {{people.name.last.length  > 8 ? '...' : people.name.last}}</span>
                 <span id="secThree">{{people.email}}</span>

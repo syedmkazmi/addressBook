@@ -351,3 +351,7 @@ input a{
     max-width:960px;
     min-width: 220px;
 }
+
+#myFavModal .modal-body{
+    padding: 0px;
+}

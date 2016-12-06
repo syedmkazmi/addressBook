@@ -55,7 +55,7 @@ angular.module('addressBook',['contactService'])
                 }
                 arr.push(data);
                 localStorage.setItem('myFavs', JSON.stringify(arr));
-
+                $scope.getMyFavs();
             } else if(!retrievedObject){
                 var arr = [];
                 var data = {
@@ -72,6 +72,7 @@ angular.module('addressBook',['contactService'])
                 };
                 arr.push(data);
                 localStorage.setItem('myFavs', JSON.stringify(arr));
+                $scope.getMyFavs();
             }
 
         };
